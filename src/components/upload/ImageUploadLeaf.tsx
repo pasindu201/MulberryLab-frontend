@@ -49,7 +49,7 @@ const ImageUploadLeaf = () => {
     formData.append("file", image);
 
     try {
-      const response = await fetch("http://flask-service:5000/leaf-disease", {
+      const response = await fetch("http://104.197.5.80:5000/leaf-disease", {
         method: "POST",
         body: formData,
       });
