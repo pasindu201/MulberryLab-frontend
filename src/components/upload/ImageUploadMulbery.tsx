@@ -38,6 +38,8 @@ const ImageUploadMulbery = () => {
     }
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleClassify = async () => {
     if (!image) {
       console.error("No image to classify.");
@@ -48,8 +50,10 @@ const ImageUploadMulbery = () => {
     const formData = new FormData();
     formData.append("file", image);
 
+    setIsLoading(true); // Set loading state to true
+
     try {
-      const response = await fetch("http://104.197.5.80:5000/predict", {
+      const response = await fetch("http://34.60.21.66:5000/predict", {
         method: "POST",
         body: formData,
       });
@@ -70,6 +74,8 @@ const ImageUploadMulbery = () => {
       });
     } catch (error) {
       console.error("Error during classification:", error);
+    } finally {
+      setIsLoading(false); // Set loading state to false
     }
   };
 
@@ -98,12 +104,18 @@ const ImageUploadMulbery = () => {
                 alt="Preview"
                 className="max-h-96 mx-auto rounded-lg shadow-lg"
               />
-              <button
-                onClick={handleClassify}
-                className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 transition-colors"
-              >
-                Classify Image
-              </button>
+              {isLoading ? (
+                <div className="flex justify-center">
+                  <div className="w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              ) : (
+                <button
+                  onClick={handleClassify}
+                  className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 transition-colors"
+                >
+                  Classify Image
+                </button>
+              )}
             </div>
           ) : (
             <div className="space-y-4">

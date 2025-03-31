@@ -8,6 +8,8 @@ const ImageUploadLeaf = () => {
   const [isDragging, setIsDragging] = useState(false);
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -48,8 +50,10 @@ const ImageUploadLeaf = () => {
     const formData = new FormData();
     formData.append("file", image);
 
+    setIsLoading(true);
+
     try {
-      const response = await fetch("http://104.197.5.80:5000/leaf-disease", {
+      const response = await fetch("http://34.60.21.66:5000/leaf-disease", {
         method: "POST",
         body: formData,
       });
@@ -67,6 +71,8 @@ const ImageUploadLeaf = () => {
       });
     } catch (error) {
       console.error("Error during classification:", error);
+    } finally {
+      setIsLoading(false); // Set loading state to false
     }
   };
 
@@ -95,12 +101,18 @@ const ImageUploadLeaf = () => {
                 alt="Preview"
                 className="max-h-96 mx-auto rounded-lg shadow-lg"
               />
-              <button
-                onClick={handleClassify}
-                className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 transition-colors"
-              >
-                Find Disease
-              </button>
+              {isLoading ? (
+                <div className="flex justify-center">
+                  <div className="w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              ) : (
+                <button
+                  onClick={handleClassify}
+                  className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 transition-colors"
+                >
+                  Find Disease
+                </button>
+              )}
             </div>
           ) : (
             <div className="space-y-4">
@@ -125,7 +137,6 @@ const ImageUploadLeaf = () => {
           )}
         </div>
       </div>
-      ,
     </div>
   );
 };
